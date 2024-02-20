@@ -11,6 +11,7 @@ import Autocomplete from "./components/Autocomplete/Autocomplete";
 
 //styles
 import './App.css';
+import Loader from "./components/Loader/Loader";
 
 export interface IData extends Array<IItem>{}
 
@@ -29,7 +30,7 @@ export interface IItem {
 function App() {
     const [suggestions, setSuggestions] = useState<any>([]);
     const [searching, setSearching] = useState<boolean>(false);
-    const {data} = useFetch(PRODUCTS_URL);
+    const {data, loading} = useFetch(PRODUCTS_URL, {}, true);
 
     const handleAutocompleteInputChange = async (value:string) => {
         setSearching(true);
@@ -50,8 +51,10 @@ function App() {
     return (
         <div className="App">
             <h2>React Autocomplete</h2>
+
             <div className="wrapper">
-                <Autocomplete onChange={handleAutocompleteInputChange} data={suggestions} searching={searching}/>
+                {loading ? <Loader/> : null}
+                {data && data?.length ? <Autocomplete onChange={handleAutocompleteInputChange} data={suggestions} searching={searching}/> : null}
             </div>
         </div>
   );

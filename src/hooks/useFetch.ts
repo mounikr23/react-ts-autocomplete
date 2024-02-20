@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
+import {wait} from "../utils/common";
 
-export default function useFetch(url:string, options?:any) {
+export default function useFetch(url:string, options?:any, mock?:boolean) {
     const [data, setData] = useState<any>([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -10,6 +11,9 @@ export default function useFetch(url:string, options?:any) {
             try {
                 const response = await fetch(url, options);
                 const data = await response.json();
+                if(mock){
+                    await wait(1000);
+                }
                 setData(data);
                 setLoading(false);
             } catch (error:any) {
