@@ -3,14 +3,14 @@ import React, {useState} from 'react';
 
 //utils
 import {wait} from "./utils/common";
+import useFetch from "./hooks/useFetch";
+import {PRODUCTS_URL} from "./constants/urls";
 
 //common components
 import Autocomplete from "./components/Autocomplete/Autocomplete";
 
 //styles
 import './App.css';
-import {PRODUCTS_URL} from "./constants/urls";
-import useFetch from "./hooks/useFetch";
 
 export interface IData extends Array<IItem>{}
 
@@ -49,7 +49,7 @@ function App() {
 
     return (
         <div className="App">
-            <h3>React Autocomplete</h3>
+            <h2>React Autocomplete</h2>
             <div className="wrapper">
                 <Autocomplete onChange={handleAutocompleteInputChange} data={suggestions} searching={searching}/>
             </div>
