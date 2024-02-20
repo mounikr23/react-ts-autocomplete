@@ -19,8 +19,9 @@ export interface IItem {
 }
 function App() {
     const [autocompleteInputValue, setAutocompleteInputValue] = useState<string>('');
-    const [data, setData] = useState<IData>([]);
     const [suggestions, setSuggestions] = useState<any>([]);
+    const [data, setData] = useState<IData>([]);
+    const [searching, setSearching] = useState<boolean>(false);
 
 
 
@@ -40,6 +41,7 @@ function App() {
     const handleAutocompleteInputChange = async (e:React.ChangeEvent<HTMLInputElement>) => {
         const value = e?.target?.value;
         setAutocompleteInputValue(value);
+        setSearching(true);
         await wait(1000);
         filterData(value);
     }
@@ -52,11 +54,14 @@ function App() {
         query === ""
             ? setSuggestions([])
             : setSuggestions([...filteredData]);
+        setSearching(false);
     }
 
   return (
     <div className="App">
-      <Autocomplete onChange={handleAutocompleteInputChange} value={autocompleteInputValue} data={suggestions}/>
+        <div className="wrapper">
+            <Autocomplete onChange={handleAutocompleteInputChange} value={autocompleteInputValue} data={suggestions} searching={searching}/>
+        </div>
     </div>
   );
 }
