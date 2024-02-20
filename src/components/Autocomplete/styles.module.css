@@ -35,3 +35,10 @@
     color: white;
     cursor: pointer;
 }
+
+.noData {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

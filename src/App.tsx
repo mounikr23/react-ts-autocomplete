@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import './App.css';
-import Autocomplete from "./components/Autocomplete/Autocomplete";
 import {wait} from "./utils/common";
+import Autocomplete from "./components/Autocomplete/Autocomplete";
+import './App.css';
 
 export interface IData extends Array<IItem>{}
 
@@ -38,17 +38,15 @@ function App() {
         return data;
     }
 
-    const handleAutocompleteInputChange = async (e:React.ChangeEvent<HTMLInputElement>) => {
-        const value = e?.target?.value;
+    const handleAutocompleteInputChange = async (value:string) => {
         setAutocompleteInputValue(value);
         setSearching(true);
-        await wait(1000);
-        filterData(value);
+        await filterData(value);
     }
 
-    const filterData = (query: string) => {
-        const savedFilters = data as Array<any>;
-        const filteredData = savedFilters.filter(
+    const filterData = async (query: string) => {
+        await wait(800);
+        const filteredData = data.filter(
             (x: IItem) => x?.title.toLowerCase().indexOf(query.toLowerCase()) > -1
         )
         query === ""
@@ -57,12 +55,12 @@ function App() {
         setSearching(false);
     }
 
-  return (
-    <div className="App">
-        <div className="wrapper">
-            <Autocomplete onChange={handleAutocompleteInputChange} value={autocompleteInputValue} data={suggestions} searching={searching}/>
+    return (
+        <div className="App">
+            <div className="wrapper">
+                <Autocomplete onChange={handleAutocompleteInputChange} value={autocompleteInputValue} data={suggestions} searching={searching}/>
+            </div>
         </div>
-    </div>
   );
 }
 
