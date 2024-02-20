@@ -1,7 +1,16 @@
-import React, {useEffect, useState} from 'react';
+//libraries
+import React, {useState} from 'react';
+
+//utils
 import {wait} from "./utils/common";
+
+//common components
 import Autocomplete from "./components/Autocomplete/Autocomplete";
+
+//styles
 import './App.css';
+import {PRODUCTS_URL} from "./constants/urls";
+import useFetch from "./hooks/useFetch";
 
 export interface IData extends Array<IItem>{}
 
@@ -18,34 +27,17 @@ export interface IItem {
     };
 }
 function App() {
-    const [autocompleteInputValue, setAutocompleteInputValue] = useState<string>('');
     const [suggestions, setSuggestions] = useState<any>([]);
-    const [data, setData] = useState<IData>([]);
     const [searching, setSearching] = useState<boolean>(false);
-
-
-
-    useEffect(  () => {
-        (async () => {
-            const response =  await fetchData();
-            setData(response);
-        })()
-    }, [])
-
-    const fetchData = async () => {
-        const json = await fetch('https://fakestoreapi.com/products');
-        const data = await json.json();
-        return data;
-    }
+    const {data} = useFetch(PRODUCTS_URL);
 
     const handleAutocompleteInputChange = async (value:string) => {
-        setAutocompleteInputValue(value);
         setSearching(true);
         await filterData(value);
-    }
+    };
 
     const filterData = async (query: string) => {
-        await wait(800);
+        await wait(500);
         const filteredData = data.filter(
             (x: IItem) => x?.title.toLowerCase().indexOf(query.toLowerCase()) > -1
         )
@@ -53,12 +45,13 @@ function App() {
             ? setSuggestions([])
             : setSuggestions([...filteredData]);
         setSearching(false);
-    }
+    };
 
     return (
         <div className="App">
+            <h3>React Autocomplete</h3>
             <div className="wrapper">
-                <Autocomplete onChange={handleAutocompleteInputChange} value={autocompleteInputValue} data={suggestions} searching={searching}/>
+                <Autocomplete onChange={handleAutocompleteInputChange} data={suggestions} searching={searching}/>
             </div>
         </div>
   );
