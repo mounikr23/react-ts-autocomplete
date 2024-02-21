@@ -12,9 +12,9 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.
 
 The app uses 'https://fakestoreapi.com/products' URL which gives a list of products.\
-The initial loader is shown using a mock timer to create a API call sense\
+The initial loader is shown using a mock timer to create a API call sense
 
 Below are few sample search terms which can be used to view suggestions
-- jack
-- hard
-- casual
+* jack
+* hard
+* casual
