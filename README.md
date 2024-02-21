@@ -3,6 +3,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 In the project directory, you can run:
+### `npm install`
+Run `npm install` to install the node module before running the application for the first time
 
 ### `npm start`
 
