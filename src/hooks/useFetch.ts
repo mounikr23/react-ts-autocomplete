@@ -23,6 +23,6 @@ export default function useFetch(url:string, options?:any, mock?:boolean) {
 
     useEffect(() => {
         fetchData();
-    }, [url, options]);
+    }, []);
     return { data, error, loading };
 }
