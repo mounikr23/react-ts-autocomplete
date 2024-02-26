@@ -6,6 +6,13 @@
     position: relative;
 }
 
+.selectedValue {
+    width: 100%;
+    span{
+        cursor: pointer;
+    }
+}
+
 .input {
     min-width: 320px;
     height: 48px;

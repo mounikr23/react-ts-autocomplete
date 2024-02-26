@@ -20,7 +20,7 @@ interface AutoCompleteProps {
 
 const Autocomplete = (props: AutoCompleteProps) => {
     const [inputValue, setValue] = useState<string>('');
-    const [selectedItem, setSelectedItem] = useState<IItem>();
+    const [selectedItem, setSelectedItem] = useState<IItem | null>(null);
     const [debouncedValue, setDebouncedValue] = useState<string>('');
     const {data=[], onChange=()=>{}, placeholder='Autocomplete', searching=false, onItemClick=()=>{}} = props;
 
@@ -71,7 +71,7 @@ const Autocomplete = (props: AutoCompleteProps) => {
 
     return (
         <div className={styles.container}>
-            {selectedItem && Object.keys(selectedItem)?.length ? (<p>{selectedItem?.title}</p>) : null}
+            {selectedItem && Object.keys(selectedItem)?.length ? (<p className={styles.selectedValue}>{selectedItem?.title} <span onClick={() => setSelectedItem(null)}>X</span></p>) : null}
             <div className={styles.innerWrapper}>
                 <input className={styles.input} onChange={handleChange} type={'search'} placeholder={placeholder} value={inputValue}/>
 
