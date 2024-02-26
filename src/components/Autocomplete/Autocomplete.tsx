@@ -13,14 +13,16 @@ import styles from './styles.module.css';
 interface AutoCompleteProps {
     data?: IData;
     onChange?: (e: string) => void;
+    onItemClick?: (item: IItem) => void;
     placeholder?: string;
     searching?: boolean;
 }
 
 const Autocomplete = (props: AutoCompleteProps) => {
     const [inputValue, setValue] = useState<string>('');
+    const [selectedItem, setSelectedItem] = useState<IItem>();
     const [debouncedValue, setDebouncedValue] = useState<string>('');
-    const {data=[], onChange=()=>{}, placeholder='Autocomplete', searching=false} = props;
+    const {data=[], onChange=()=>{}, placeholder='Autocomplete', searching=false, onItemClick=()=>{}} = props;
 
     const highlightSearchText = (text: string) => {
         const pattern = new RegExp("(" + debouncedValue + ")", "gi");
@@ -32,6 +34,11 @@ const Autocomplete = (props: AutoCompleteProps) => {
         onChange?.(inputValue);
         setDebouncedValue(inputValue);
     };
+
+    const handleItemClick = (item:IItem) => {
+        setSelectedItem(item);
+        onItemClick?.(item);
+    }
 
     useEffect(() => {
         if(inputValue?.length){
@@ -55,7 +62,7 @@ const Autocomplete = (props: AutoCompleteProps) => {
                 <ul className={styles.suggestionsContainer}>
                     {data?.map((item: IItem) => (
                         <li className={styles.suggestionItem}
-                            dangerouslySetInnerHTML={{__html: highlightSearchText(item.title)}} key={item?.title}/>
+                            dangerouslySetInnerHTML={{__html: highlightSearchText(item.title)}} key={item?.title} onClick={() => handleItemClick(item)}/>
                     ))}
                 </ul>
             </>
@@ -64,19 +71,22 @@ const Autocomplete = (props: AutoCompleteProps) => {
 
     return (
         <div className={styles.container}>
-            <input className={styles.input} onChange={handleChange} type={'search'} placeholder={placeholder} value={inputValue}/>
+            {selectedItem && Object.keys(selectedItem)?.length ? (<p>{selectedItem?.title}</p>) : null}
+            <div className={styles.innerWrapper}>
+                <input className={styles.input} onChange={handleChange} type={'search'} placeholder={placeholder} value={inputValue}/>
 
-            {debouncedValue?.length && searching ? (
-                <div className={`${styles.suggestionsContainer} ${styles.noData}`}>
-                    <Loader/>
-                </div>
-            ) : debouncedValue && data && data.length ? (
-                renderDropdown()
-            ) : debouncedValue && !data?.length && !searching ? (
-                <div className={`${styles.suggestionsContainer} ${styles.noData}`}>
-                    <span>No matching suggestions found</span>
-                </div>
-            ) : null}
+                {debouncedValue?.length && searching ? (
+                    <div className={`${styles.suggestionsContainer} ${styles.noData}`}>
+                        <Loader/>
+                    </div>
+                ) : debouncedValue && data && data.length ? (
+                    renderDropdown()
+                ) : debouncedValue && !data?.length && !searching ? (
+                    <div className={`${styles.suggestionsContainer} ${styles.noData}`}>
+                        <span>No matching suggestions found</span>
+                    </div>
+                ) : null}
+            </div>
         </div>
     )
 }

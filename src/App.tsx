@@ -30,7 +30,7 @@ export interface IItem {
 function App() {
     const [suggestions, setSuggestions] = useState<any>([]);
     const [searching, setSearching] = useState<boolean>(false);
-    const {data, loading} = useFetch(PRODUCTS_URL, {}, true);
+    const {data, loading} = useFetch(PRODUCTS_URL, null, false);
 
     const handleAutocompleteInputChange = async (value:string) => {
         setSearching(true);
