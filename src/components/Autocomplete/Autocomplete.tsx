@@ -23,7 +23,7 @@ const Autocomplete = (props: AutoCompleteProps) => {
     const [selectedItem, setSelectedItem] = useState<IItem | null>(null);
     const [debouncedValue, setDebouncedValue] = useState<string>('');
     const {data=[], onChange=()=>{}, placeholder='Autocomplete', searching=false, onItemClick=()=>{}} = props;
-
+    const hasSelectedItem = selectedItem && Object.keys(selectedItem)?.length
     const highlightSearchText = (text: string) => {
         const pattern = new RegExp("(" + debouncedValue + ")", "gi");
         const highlightedText = text.replace(pattern, `<b>${debouncedValue}</b>`);
@@ -37,22 +37,28 @@ const Autocomplete = (props: AutoCompleteProps) => {
 
     const handleItemClick = (item:IItem) => {
         setSelectedItem(item);
+        setValue(item?.title);
         onItemClick?.(item);
     }
 
     useEffect(() => {
-        if(inputValue?.length){
-            const timeoutId = setTimeout(() => {
-                setDebouncedValues()
-            }, 300);
-            return () => clearTimeout(timeoutId);
-        }else{
-            setDebouncedValues();
+        if(!hasSelectedItem){
+            if(inputValue?.length){
+                const timeoutId = setTimeout(() => {
+                    setDebouncedValues()
+                }, 300);
+                return () => clearTimeout(timeoutId);
+            }else{
+                setDebouncedValues();
+            }
         }
     }, [inputValue])
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         const val = e?.target?.value;
+        if(!val?.length){
+            setSelectedItem(null)
+        }
         setValue(val);
     };
 
@@ -71,15 +77,13 @@ const Autocomplete = (props: AutoCompleteProps) => {
 
     return (
         <div className={styles.container}>
-            {selectedItem && Object.keys(selectedItem)?.length ? (<p className={styles.selectedValue}>{selectedItem?.title} <span onClick={() => setSelectedItem(null)}>X</span></p>) : null}
             <div className={styles.innerWrapper}>
                 <input className={styles.input} onChange={handleChange} type={'search'} placeholder={placeholder} value={inputValue}/>
-
                 {debouncedValue?.length && searching ? (
                     <div className={`${styles.suggestionsContainer} ${styles.noData}`}>
                         <Loader/>
                     </div>
-                ) : debouncedValue && data && data.length ? (
+                ) : debouncedValue && data && data.length && !hasSelectedItem ? (
                     renderDropdown()
                 ) : debouncedValue && !data?.length && !searching ? (
                     <div className={`${styles.suggestionsContainer} ${styles.noData}`}>
