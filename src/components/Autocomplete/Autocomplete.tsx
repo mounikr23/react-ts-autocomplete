@@ -56,10 +56,12 @@ const Autocomplete = (props: AutoCompleteProps) => {
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         const val = e?.target?.value;
+        setValue(val);
         if(!val?.length){
             setSelectedItem(null)
+            setDebouncedValue('')
+            onChange?.('');
         }
-        setValue(val);
     };
 
     const renderDropdown = () => {
